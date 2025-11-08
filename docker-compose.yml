@@ -13,7 +13,7 @@ services:
 
   stats-db:
     image: postgres:16.1
-    container_name: postgres
+    container_name: postgres-ewm-stats
     ports:
      - "6541:5432"
     volumes:
