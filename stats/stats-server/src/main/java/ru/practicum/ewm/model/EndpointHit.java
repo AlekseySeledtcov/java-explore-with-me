@@ -1,9 +1,11 @@
-package model;
+package ru.practicum.ewm.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "endpoint_hit")
@@ -23,5 +25,5 @@ public class EndpointHit {
     private String ip;
 
     @Column(name = "time_stamp")
-    private String timestamp;
+    private LocalDateTime timestamp;
 }

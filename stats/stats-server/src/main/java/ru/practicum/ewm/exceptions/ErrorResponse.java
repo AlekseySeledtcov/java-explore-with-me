@@ -1,4 +1,4 @@
-package exceptions;
+package ru.practicum.ewm.exceptions;
 
 import java.util.Map;
 

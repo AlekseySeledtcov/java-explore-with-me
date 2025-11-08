@@ -9,7 +9,7 @@ depends_on: # определяет порядок запуска сервисо�
   - stats-db
 environment: # задаёт переменную окружения для контейнера, которая указывает приложению (на Spring Boot) параметры подключения к базе данных PostgreSQL.
   - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:543Y2/ewm-stats
-  -
+
 stats-db:
   image: postgres:16.1
   container_name: postgres

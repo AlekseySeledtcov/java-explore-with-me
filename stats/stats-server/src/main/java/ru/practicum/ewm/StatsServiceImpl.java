@@ -1,10 +1,12 @@
-import dto.EndpointHitDto;
-import dto.ViewStatsDto;
+package ru.practicum.ewm;
+
 import lombok.RequiredArgsConstructor;
-import mapper.EndpointHitMapper;
-import model.EndpointHit;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.ewm.dto.EndpointHitDto;
+import ru.practicum.ewm.dto.ViewStatsDto;
+import ru.practicum.ewm.mapper.EndpointHitMapper;
+import ru.practicum.ewm.model.EndpointHit;
 
 import java.time.LocalDateTime;
 import java.util.List;

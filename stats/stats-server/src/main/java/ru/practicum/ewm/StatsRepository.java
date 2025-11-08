@@ -1,9 +1,11 @@
-import dto.ViewStatsDto;
-import model.EndpointHit;
+package ru.practicum.ewm;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ru.practicum.ewm.dto.ViewStatsDto;
+import ru.practicum.ewm.model.EndpointHit;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,10 +13,10 @@ import java.util.List;
 @Repository
 public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
-    @Query("SELECT new dto.ViewStatsDto(eh.app, eh.uri, COUNT(DISTINCT eh.ip)) " +
+    @Query("SELECT new ru.practicum.ewm.dto.ViewStatsDto(eh.app, eh.uri, COUNT(DISTINCT eh.ip)) " +
             "FROM EndpointHit AS eh " +
             "WHERE eh.uri IN :uris AND eh.timestamp BETWEEN :start AND :end " +
-            "GROUP BY eh.uri " +
+            "GROUP BY eh.app, eh.uri " +
             "ORDER BY COUNT(DISTINCT eh.ip) DESC")
     List<ViewStatsDto> findAllByTimestampBetweenStartAndEndWithUniqueIpWithUris(
             @Param("start") LocalDateTime start,
@@ -22,20 +24,20 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             @Param("uris") List<String> uris);
 
 
-    @Query("SELECT new dto.ViewStatsDto(eh.app, eh.uri, COUNT(DISTINCT eh.ip)) " +
+    @Query("SELECT new ru.practicum.ewm.dto.ViewStatsDto(eh.app, eh.uri, COUNT(DISTINCT eh.ip)) " +
             "FROM EndpointHit AS eh " +
             "WHERE eh.timestamp BETWEEN :start AND :end " +
-            "GROUP BY eh.uri " +
+            "GROUP BY eh.app, eh.uri " +
             "ORDER BY COUNT(DISTINCT eh.ip) DESC")
     List<ViewStatsDto> findAllByTimestampBetweenStartAndEndWithUniqueIpWithoutUris(
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end);
 
 
-    @Query("SELECT new dto.ViewStatsDto(eh.app, eh.uri, COUNT(eh.ip)) " +
+    @Query("SELECT new ru.practicum.ewm.dto.ViewStatsDto(eh.app, eh.uri, COUNT(eh.ip)) " +
             "FROM EndpointHit AS eh " +
             "WHERE eh.uri IN :uris AND eh.timestamp BETWEEN :start AND :end " +
-            "GROUP BY eh.uri " +
+            "GROUP BY eh.app, eh.uri " +
             "ORDER BY COUNT(eh.ip) DESC")
     List<ViewStatsDto> findAllByTimestampBetweenStartAndEndWithUris(
             @Param("start") LocalDateTime start,
@@ -43,10 +45,10 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             @Param("uris") List<String> uris);
 
 
-    @Query("SELECT new dto.ViewStatsDto(eh.app, eh.uri, COUNT(eh.ip)) " +
+    @Query("SELECT new ru.practicum.ewm.dto.ViewStatsDto(eh.app, eh.uri, COUNT(eh.ip)) " +
             "FROM EndpointHit AS eh " +
             "WHERE eh.timestamp BETWEEN :start AND :end " +
-            "GROUP BY eh.uri " +
+            "GROUP BY eh.app, eh.uri " +
             "ORDER BY COUNT(eh.ip) DESC")
     List<ViewStatsDto> findAllByTimestampBetweenStartAndEndWithoutUris(
             @Param("start") LocalDateTime start,

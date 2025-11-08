@@ -12,7 +12,7 @@ replay_pid*
 out/
 target/
 !.mvn/wrapper/maven-wrapper.jar
-!**/src/StatsClient/**/target/
+!**/src/ru.practicum.ewm.client.StatsClient/**/target/
 !**/src/test/**/target/
 
 ### IntelliJ IDEA ###

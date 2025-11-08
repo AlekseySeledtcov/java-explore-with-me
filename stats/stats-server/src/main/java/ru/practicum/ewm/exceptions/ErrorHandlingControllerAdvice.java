@@ -1,4 +1,4 @@
-package exceptions;
+package ru.practicum.ewm.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
