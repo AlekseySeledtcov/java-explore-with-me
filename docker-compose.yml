@@ -2,6 +2,7 @@ services:
   stats-server:
     build:
       context: ./stats/stats-server #указывает Docker Compose, где искать контекст сборки и Dockerfile для сервиса
+      dockerfile: Dockerfile
     image: stats-server-image
     container_name: ewm-stats-server # задаёт имя (тег) Docker‑образа для сервиса
     ports:
@@ -10,6 +11,8 @@ services:
       - stats-db
     environment: # задаёт переменную окружения для контейнера, которая указывает приложению (на Spring Boot) параметры подключения к базе данных PostgreSQL.
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/ewm-stats
+      - SPRING_DATASOURCE_USERNAME=dbuser
+      - SPRING_DATASOURCE_PASSWORD=12345
 
   stats-db:
     image: postgres:16.1
@@ -22,6 +25,11 @@ services:
       - POSTGRES_DB=ewm-stats
       - POSTGRES_USER=dbuser
       - POSTGRES_PASSWORD=12345
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
 
   #ewm-service:
   #  ports:
