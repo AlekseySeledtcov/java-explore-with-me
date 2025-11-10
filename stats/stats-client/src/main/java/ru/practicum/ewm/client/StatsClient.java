@@ -2,6 +2,8 @@ package ru.practicum.ewm.client;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -36,17 +38,24 @@ public class StatsClient {
         );
     }
 
-    public ResponseEntity<ViewStatsDto> getStats(LocalDateTime start,
-                                                 LocalDateTime end,
-                                                 List<String> uris,
-                                                 Boolean unique) {
+
+    public List<ViewStatsDto> getStats(LocalDateTime start,
+                                       LocalDateTime end,
+                                       List<String> uris,
+                                       Boolean unique) {
+        if (start == null) {
+            throw new IllegalArgumentException("Параметр Start должен быть задан");
+        }
+        if (end == null) {
+            throw new IllegalArgumentException("Параметр End должен быть задан");
+        }
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(serverUrl + "/stats")
-                .queryParam("start", start.format(DateTimeFormatter.ISO_DATE_TIME))
-                .queryParam("end", end.format(DateTimeFormatter.ISO_DATE_TIME));
+                .queryParam("start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .queryParam("end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-        if (uris != null) {
+        if (uris != null && !uris.isEmpty()) {
             for (String uri : uris) {
                 builder.queryParam("uris", uri);
             }
@@ -58,6 +67,20 @@ public class StatsClient {
 
         String url = builder.toUriString();
 
-        return restTemplate.getForEntity(url, ViewStatsDto.class);
+        ParameterizedTypeReference<List<ViewStatsDto>> responseType =
+                new ParameterizedTypeReference<List<ViewStatsDto>>() {
+                };
+
+        ResponseEntity<List<ViewStatsDto>> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                null,
+                responseType);
+
+        if (response.getStatusCode().isError()) {
+            throw new RuntimeException("Запрос не выполнился, код статуса " + response.getStatusCode());
+        }
+
+        return response.getBody();
     }
 }
