@@ -28,8 +28,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-
-        if (start.isAfter(end) || start.isAfter(LocalDateTime.now())) {
+        if (start.isAfter(LocalDateTime.now()) || start.isAfter(end)) {
             throw new IllegalArgumentException("Указана некорректная дата");
         }
 
@@ -52,3 +51,15 @@ public class StatsServiceImpl implements StatsService {
                 : statsRepository.findAllByTimestampBetweenStartAndEndWithUris(start, end, uris);
     }
 }
+
+
+//    @Override
+//    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+//        if (start.isAfter(LocalDateTime.now()) || start.isAfter(end)) {
+//            throw new IllegalArgumentException("Указана некорректная дата");
+//        }
+//        List<ViewStatsDto> result = statsRepository.findAllByTimestampBetweenStartAndEndWithUniqueIpWithUris(start, end, uris);
+//
+//        return result;
+//    }
+//}

@@ -40,6 +40,7 @@ public class StatsController {
                 "end \t{} \n" +
                 "uris \t{} \n" +
                 "unique \t{} \n", start, end, uris, unique);
+
         return statsService.getStats(start, end, uris, unique);
     }
 }
