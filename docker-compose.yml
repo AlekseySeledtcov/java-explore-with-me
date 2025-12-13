@@ -38,14 +38,14 @@ services:
     build:
       context: ./main
       dockerfile: Dockerfile
-    image: main-sever-image
+    image: main-server-image
     container_name: ewm-main-server
     ports:
       - "8080:8080"
     depends_on:
      - main-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/ewm-main
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/ewm-main
       - SPRING_DATASOURCE_USERNAME=dbuser
       - SPRING_DATASOURCE_PASSWORD=12345
 
