@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.practicum.ewm.client.StatsClient;
 
 @Configuration
-public class appConfig {
+public class AppConfig {
     @Value("${stats-service.url}")
     private String statsServiceUrl;
 
