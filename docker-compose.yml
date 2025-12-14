@@ -11,28 +11,33 @@ services:
       - stats-db
     environment: # задаёт переменную окружения для контейнера, которая указывает приложению (на Spring Boot) параметры подключения к базе данных PostgreSQL.
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/ewm-stats
-      - SPRING_DATASOURCE_USERNAME=dbuser
+      - SPRING_DATASOURCE_USERNAME=statsuser
       - SPRING_DATASOURCE_PASSWORD=12345
     networks:
-      - app-network
-
+      app-network:
+        aliases:
+          - stats-server
 
   stats-db:
     image: postgres:16.1
     container_name: postgres-ewm-stats
     ports:
-     - "6541:5432"
+      - "6541:5432"
     volumes:
       - stats-postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=ewm-stats
-      - POSTGRES_USER=dbuser
+      - POSTGRES_USER=statsuser
       - POSTGRES_PASSWORD=12345
+    networks:
+      app-network:
+        aliases:
+          - stats-db
     healthcheck:
       test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
       timeout: 5s
       interval: 5s
-      retries: 10
+      retries: 30
 
   ewm-service:
     build:
@@ -43,11 +48,15 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-     - main-db
+      - main-db
+      - stats-server
     environment:
+      - stats-service.url=http://stats-server:9090
       - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/ewm-main
-      - SPRING_DATASOURCE_USERNAME=dbuser
+      - SPRING_DATASOURCE_USERNAME=mainuser
       - SPRING_DATASOURCE_PASSWORD=12345
+    networks:
+      - app-network
 
   main-db:
     image: postgres:16.1
@@ -57,14 +66,18 @@ services:
     volumes:
       - main-postgres-data:/var/lib/postgresql/data
     environment:
-        - POSTGRES_DB=ewm-main
-        - POSTGRES_USER=dbuser
-        - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=ewm-main
+      - POSTGRES_USER=mainuser
+      - POSTGRES_PASSWORD=12345
+    networks:
+      app-network:
+        aliases:
+          - main-db
     healthcheck:
-        test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
-        timeout: 5s
-        interval: 5s
-        retries: 10
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
 
 networks:
   app-network:

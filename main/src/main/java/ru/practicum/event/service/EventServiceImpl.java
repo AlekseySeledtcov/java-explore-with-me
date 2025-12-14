@@ -55,7 +55,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
     private final StatsClient statsClient;
-    @Value("${appl}")
+    @Value("${app}")
     String app;
 
     @Transactional(readOnly = true)

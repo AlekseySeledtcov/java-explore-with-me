@@ -24,7 +24,7 @@ public class StatsClient {
     private final RestTemplate restTemplate;
     private final String serverUrl;
 
-    public StatsClient(RestTemplateBuilder builder, @Value("${ewm-stats-client.url}") String serverUrl) {
+    public StatsClient(RestTemplateBuilder builder, @Value("${stats-service.url}") String serverUrl) {
         this.serverUrl = serverUrl;
         this.restTemplate = builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))

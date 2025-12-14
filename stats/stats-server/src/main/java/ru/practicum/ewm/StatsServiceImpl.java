@@ -1,6 +1,7 @@
 package ru.practicum.ewm;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.EndpointHitDto;
@@ -11,6 +12,7 @@ import ru.practicum.ewm.model.EndpointHit;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -33,8 +35,12 @@ public class StatsServiceImpl implements StatsService {
         }
 
         if (unique) {
-            return findUniqueIpStats(start, end, uris);
+            List<ViewStatsDto> response = findUniqueIpStats(start, end, uris);
+            log.info("1");
+            log.info("ViewStatsDto ={}", response);
+            return response;
         } else {
+            log.info("2");
             return findNonUniqueIpStats(start, end, uris);
         }
     }
@@ -51,15 +57,3 @@ public class StatsServiceImpl implements StatsService {
                 : statsRepository.findAllByTimestampBetweenStartAndEndWithUris(start, end, uris);
     }
 }
-
-
-//    @Override
-//    public List<ViewStatsDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-//        if (start.isAfter(LocalDateTime.now()) || start.isAfter(end)) {
-//            throw new IllegalArgumentException("Указана некорректная дата");
-//        }
-//        List<ViewStatsDto> result = statsRepository.findAllByTimestampBetweenStartAndEndWithUniqueIpWithUris(start, end, uris);
-//
-//        return result;
-//    }
-//}
