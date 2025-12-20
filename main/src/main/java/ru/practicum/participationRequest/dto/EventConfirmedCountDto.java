@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EventConfirmedCountDto {
-    Long eventId;
-    Long confirmedCount;
+    private Long eventId;
+    private Long confirmedCount;
 }

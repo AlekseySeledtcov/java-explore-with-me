@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.compilation.dto.CompilationDto;
@@ -22,33 +21,33 @@ public class CompilationControllerAdmin {
 
     private final CompilationService compilationService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<CompilationDto> createCompilation(
+    public CompilationDto createCompilation(
             @Valid @RequestBody NewCompilationDto newCompilationDto) {
 
         log.debug("Добавление новой подборки.\nТело запроса: {}", newCompilationDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(compilationService.createCompilations(newCompilationDto));
+
+        return compilationService.createCompilations(newCompilationDto);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{compId}")
-    public ResponseEntity<Void> deleteCompilation(@Positive @PathVariable(value = "compId") Long id) {
+    public void deleteCompilation(@Positive @PathVariable(value = "compId") Long id) {
 
         log.debug("Удаление подборки по id={}", id);
+
         compilationService.deleteCompilation(id);
-        return ResponseEntity
-                .noContent()
-                .build();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{compId}")
-    public ResponseEntity<CompilationDto> updateCompilation(
+    public CompilationDto updateCompilation(
             @Valid @RequestBody UpdateCompilationRequest updateCompilationRequest,
             @Positive @PathVariable(value = "compId") Long id) {
+
         log.debug("Обновить информацию о подборке по id={}\n. Тело запроса:{}", id, updateCompilationRequest);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(compilationService.patchCompilations(updateCompilationRequest, id));
+
+        return compilationService.patchCompilations(updateCompilationRequest, id);
     }
 }

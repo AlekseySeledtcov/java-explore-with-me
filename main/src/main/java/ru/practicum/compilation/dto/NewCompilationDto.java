@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.UniqueElements;
 
-import java.util.List;
+import java.util.Set;
 
 // Подборка событий
 @Getter
@@ -15,7 +15,7 @@ public class NewCompilationDto {
 
     // Список идентификаторов событий входящих в подборку (уникальный)
     @UniqueElements(message = "Элементы списка событий должны быть уникальными")
-    private List<Long> events;
+    private Set<Long> events;
 
     // Закреплена ли подборка на главной странице сайта
     private Boolean pinned = false;

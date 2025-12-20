@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.annotations.DateTimeFormat;
-import ru.practicum.annotations.EnumValue;
 import ru.practicum.event.enums.StateActionAdmin;
 import ru.practicum.location.model.Location;
 
@@ -41,8 +40,7 @@ public class UpdateEventAdminRequest {
     private Boolean requestModeration;
 
     // Новое состояние события
-    @EnumValue(enumClass = StateActionAdmin.class)
-    private String stateAction;
+    private StateActionAdmin stateAction;
 
     // Новый заголовок
     @Size(min = 3, max = 120)

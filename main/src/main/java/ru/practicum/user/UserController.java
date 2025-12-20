@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.user.Service.UserService;
@@ -24,8 +23,9 @@ public class UserController {
 
     private final UserService userService;
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public ResponseEntity<List<UserDto>> getUser(
+    public List<UserDto> getUser(
             @RequestParam(required = false) List<Long> ids,
             @RequestParam(defaultValue = "0") Integer from,
             @RequestParam(defaultValue = "10") Integer size) {
@@ -33,34 +33,30 @@ public class UserController {
         log.debug("Получение информации о пользователях \n" +
                 "Список ids={}", ids);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(userService.getUsers(ids, from, size));
+        return userService.getUsers(ids, from, size);
     }
 
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<UserDto> postUser(
+    public UserDto postUser(
             @Valid @RequestBody NewUserRequest newUserRequest) {
 
         log.debug("Добавление нового пользователя \n" +
                 "Тело запроса {}", newUserRequest);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(userService.postUser(newUserRequest));
+
+        return userService.postUser(newUserRequest);
     }
 
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{userId}")
-    ResponseEntity<Void> deleteUser(
+    public void deleteUser(
             @Positive @Min(1) @PathVariable(name = "userId") Long id) {
 
         log.debug("Удаление пользователя с id={}", id);
 
         userService.deleteUser(id);
-        return ResponseEntity
-                .noContent()
-                .build();
     }
 
 }

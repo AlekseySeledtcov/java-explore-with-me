@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.annotations.DateTimeFormat;
@@ -25,8 +25,9 @@ public class EventControllerAdmin {
 
     private final EventService eventService;
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public ResponseEntity<List<EventFullDto>> getEventsAdmin(
+    public List<EventFullDto> getEventsAdmin(
             @RequestParam(value = "users", required = false) List<Long> users,
             @RequestParam(value = "states", required = false) List<@EnumValue(enumClass = State.class) String> states,
             @RequestParam(value = "categories", required = false) List<Long> categories,
@@ -44,21 +45,18 @@ public class EventControllerAdmin {
                 "from \t\t{} \n" +
                 "size \t\t{} \n", users, states, categories, rangeStart, rangeEnd, from, size);
 
-        List<EventFullDto> response = eventService.getEventsAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
-
-        return ResponseEntity.ok().body(response);
+        return eventService.getEventsAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> patchEvent(
+    public EventFullDto patchEvent(
             @Positive @PathVariable(value = "eventId", required = true) Long eventId,
             @Valid @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
 
         log.debug("Редактирование данных события с id ={} и его статуса\n" +
                 "тело запроса {}", eventId, updateEventAdminRequest);
 
-        EventFullDto response = eventService.patchEvent(eventId, updateEventAdminRequest);
-
-        return ResponseEntity.ok().body(response);
+        return eventService.patchEvent(eventId, updateEventAdminRequest);
     }
 }

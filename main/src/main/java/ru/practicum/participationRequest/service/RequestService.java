@@ -26,3 +26,4 @@ public interface RequestService {
 
     HashMap<Long, Long> getConfirmedRequestsCount(List<Long> eventIds);
 }
+

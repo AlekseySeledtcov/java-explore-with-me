@@ -8,7 +8,7 @@ import ru.practicum.event.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.event.dto.EventRequestStatusUpdateResult;
 import ru.practicum.event.enums.State;
 import ru.practicum.event.model.Event;
-import ru.practicum.event.service.EventCommonService;
+import ru.practicum.event.service.impl.EventCommonServiceImpl;
 import ru.practicum.exceptions.AlreadyExistsException;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.participationRequest.RequestMapper;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class RequestServiceImpl implements RequestService {
 
     private final UserService userService;
-    private final EventCommonService eventCommonService;
+    private final EventCommonServiceImpl eventCommonServiceImpl;
     private final RequestRepository requestRepository;
     private final RequestMapper requestMapper;
 
@@ -50,7 +50,7 @@ public class RequestServiceImpl implements RequestService {
     public ParticipationRequestDto createRequest(Long userId, Long eventId) {
 
         User requester = userService.getUserOrThrow(userId);
-        Event event = eventCommonService.findById(eventId)
+        Event event = eventCommonServiceImpl.findById(eventId)
                 .orElseThrow(() -> new NotFoundException("Event with id " + eventId + " was not found"));
 
         // Проерка на создание повторного запроса на участие в событии
@@ -95,7 +95,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<ParticipationRequestDto> getRequestsByUserIdAndEventId(long userId, long eventId) {
 
-        if (!eventCommonService.existsByIdAndInitiatorId(eventId, userId)) {
+        if (!eventCommonServiceImpl.existsByIdAndInitiatorId(eventId, userId)) {
             throw new AlreadyExistsException("The event does not belong to the user");
         }
 
@@ -114,7 +114,7 @@ public class RequestServiceImpl implements RequestService {
             EventRequestStatusUpdateRequest updateRequest) {
 
         // Проверка наличия события и прав пользователя
-        Event event = eventCommonService.findByEventIdAndInitiatorIdOrThrow(eventId, userId);
+        Event event = eventCommonServiceImpl.findByEventIdAndInitiatorIdOrThrow(eventId, userId);
 
         // Подсчет подтвержденных запросов
         long countConfirmedRequests = getCountConfirmedRequestsByEventId(eventId);
@@ -136,7 +136,7 @@ public class RequestServiceImpl implements RequestService {
         List<ParticipationRequestDto> confirmedRequests = new ArrayList<>();
         List<ParticipationRequestDto> rejectedRequests = new ArrayList<>();
 
-        RequestStatus newStatus = Enum.valueOf(RequestStatus.class, updateRequest.getStatus());
+        RequestStatus newStatus = updateRequest.getStatus();
         if (newStatus == RequestStatus.REJECTED ||
                 newStatus == RequestStatus.CANCELED) {
             // Обновление статусов

@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.category.dto.CategoryDto;
@@ -22,36 +21,35 @@ public class CategoryControllerAdmin {
 
     private final CategoryService categoryService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<CategoryDto> postCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
+    public CategoryDto postCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
 
         log.debug("Добавление новой категории. Тело запроса {}", newCategoryDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(categoryService.postCategory(newCategoryDto));
+
+        return categoryService.postCategory(newCategoryDto);
     }
 
-
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{catId}")
-    public ResponseEntity<Void> deleteCategory(
+    public void deleteCategory(
             @Positive @Min(1) @PathVariable(name = "catId") Long id) {
 
         log.debug("Удаление категории с id={}", id);
+
         categoryService.deleteCategory(id);
-        return ResponseEntity
-                .noContent()
-                .build();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{catId}")
-    public ResponseEntity<CategoryDto> patchCategory(
+    public CategoryDto patchCategory(
             @Valid @RequestBody CategoryDto categoryDto,
             @PathVariable(name = "catId") Long id) {
 
         log.debug("Изменение категории \n" +
                 "Тело запроса {}\n" +
                 "Идентификатор id={}\n", categoryDto, id);
-        CategoryDto updated = categoryService.patchCategory(categoryDto, id);
-        return ResponseEntity.ok(updated);
+
+        return categoryService.patchCategory(categoryDto, id);
     }
 }

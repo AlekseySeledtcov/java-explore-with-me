@@ -17,6 +17,7 @@ public interface UserMapper {
 
     UserDto toDto(User user);
 
-    @Named("UserToShortDto")
+    @Named("userToShortDto")
     UserShortDto toShortDto(User user);
 }
+

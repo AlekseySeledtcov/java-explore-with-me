@@ -67,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional(readOnly = true)
     @Override
-    public Category getCategoryEntityById(Long categoryId) {
+    public Category getCategoryEntityByIdOrThrow(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException("Категории с указанным id " + categoryId + "не существует"));
     }

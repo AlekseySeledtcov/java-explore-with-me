@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.*;
@@ -27,80 +26,74 @@ public class EventControllerUser {
     private final EventService eventService;
     private final RequestService requestService;
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public ResponseEntity<List<EventShortDto>> getEventsByUserId(
+    public List<EventShortDto> getEventsByUserId(
             @Positive @PathVariable(value = "userId") Long userId,
             @RequestParam(value = "from", defaultValue = "0") Integer from,
             @RequestParam(value = "size", defaultValue = "10") Integer size) {
 
         log.debug("Запрос на получение списка событий добавленных пользователем с id={}", userId);
-        List<EventShortDto> response = eventService.getEventsByUserId(userId, from, size);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return eventService.getEventsByUserId(userId, from, size);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public ResponseEntity<EventFullDto> createEvent(
+    public EventFullDto createEvent(
             @Positive @PathVariable(value = "userId") Long userId,
             @Valid @RequestBody NewEventDto newEventDto) {
 
         log.debug("Запрос на добавление нового события\n" +
                 "Тело запроса {}\n" +
                 "Идентификатор id={}", newEventDto, userId);
-        EventFullDto response = eventService.createEvent(userId, newEventDto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+
+        return eventService.createEvent(userId, newEventDto);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> getEventByIdAndUserId(
+    public EventFullDto getEventByIdAndUserId(
             @Positive @PathVariable(value = "userId") Long userId,
             @Positive @PathVariable(value = "eventId") Long eventId) {
 
         log.debug("Запрос события с id={} от пользователя с id={}", eventId, userId);
-        EventFullDto response = eventService.getEventByIdAndUserId(userId, eventId);
 
-        return ResponseEntity.ok().body(response);
+        return eventService.getEventByIdAndUserId(userId, eventId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> updateEventByIdAndUserId(
+    public EventFullDto updateEventByIdAndUserId(
             @Positive @PathVariable(value = "userId") Long userId,
             @Positive @PathVariable(value = "eventId") Long eventId,
             @Valid @RequestBody UpdateEventUserRequest updateRequest) {
 
         log.debug("Запрос обновления событи с id={} от пользователя с id={}, тело запроса: {}", userId, eventId, updateRequest);
-        EventFullDto response = eventService.updateEventByIdAndUserId(userId, eventId, updateRequest);
 
-        return ResponseEntity.ok().body(response);
+        return eventService.updateEventByIdAndUserId(userId, eventId, updateRequest);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{eventId}/requests")
-    public ResponseEntity<List<ParticipationRequestDto>> getRequestsByUserIdAndEventId(
+    public List<ParticipationRequestDto> getRequestsByUserIdAndEventId(
             @Positive @PathVariable(value = "userId") Long userId,
             @Positive @PathVariable(value = "eventId") Long eventId) {
 
         log.debug("Запрос списка запросов на участие: userId={}, eventId={}", userId, eventId);
-        List<ParticipationRequestDto> response = requestService.getRequestsByUserIdAndEventId(userId, eventId);
 
-        return ResponseEntity.ok().body(response);
+        return requestService.getRequestsByUserIdAndEventId(userId, eventId);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{eventId}/requests")
-    public ResponseEntity<EventRequestStatusUpdateResult> patchStatusRequestsByUserIdAndEventId(
+    public EventRequestStatusUpdateResult patchStatusRequestsByUserIdAndEventId(
             @Positive @PathVariable(value = "userId") Long userId,
             @Positive @PathVariable(value = "eventId") Long eventId,
             @NotNull @Valid @RequestBody EventRequestStatusUpdateRequest updateRequest) {
 
         log.debug("Запрос изменения статуса заявок на участие в событии eventId={}, пользователя userid={}", eventId, userId);
-        EventRequestStatusUpdateResult response = requestService.patchStatusRequestsByUserIdAndEventId(
-                userId,
-                eventId,
-                updateRequest);
 
-        return ResponseEntity.ok().body(response);
+        return requestService.patchStatusRequestsByUserIdAndEventId(userId, eventId, updateRequest);
     }
 }

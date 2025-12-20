@@ -14,8 +14,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/ru.practicum.ewm.client.StatsClient/**/target/
 !**/src/test/**/target/
-main/volumes/postgres/
-stats/stats-server/volumes/postgres/
+**/volumes/postgres/
 
 ### IntelliJ IDEA ###
 .idea

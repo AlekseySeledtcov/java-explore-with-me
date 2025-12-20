@@ -46,8 +46,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     @Override
     public CompilationDto patchCompilations(UpdateCompilationRequest updateCompilationRequest, long id) {
-        Compilation oldCompilation = compilationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Compilation with " + id + " was not found"));
+        Compilation oldCompilation = findByIdOrThrow(id);
 
         compilationMapper.patch(updateCompilationRequest, oldCompilation);
         Compilation result = compilationRepository.save(oldCompilation);
@@ -67,14 +66,20 @@ public class CompilationServiceImpl implements CompilationService {
                 .collect(Collectors.toList());
     }
 
+
     @Override
     public CompilationDto getCompilationById(long id) {
-        Compilation compilation = compilationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Compilation with id=" + id + "was not found"));
+        Compilation compilation = findByIdOrThrow(id);
+
         return compilationMapper.toDto(compilation);
     }
 
     private boolean existsById(long id) {
         return compilationRepository.existsById(id);
+    }
+
+    private Compilation findByIdOrThrow(long id) {
+        return compilationRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Compilation with id=" + id + "was not found"));
     }
 }
