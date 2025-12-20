@@ -1,7 +1,6 @@
 package ru.practicum.compilation.sevice;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +10,6 @@ import ru.practicum.compilation.dto.NewCompilationDto;
 import ru.practicum.compilation.dto.UpdateCompilationRequest;
 import ru.practicum.compilation.mapper.CompilationMapper;
 import ru.practicum.compilation.model.Compilation;
-import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.utils.PaginationUtils;
 
@@ -24,7 +22,6 @@ public class CompilationServiceImpl implements CompilationService {
 
     private final CompilationRepository compilationRepository;
     private final CompilationMapper compilationMapper;
-    private final EventMapper eventMapper;
 
     @Transactional
     @Override
@@ -60,8 +57,7 @@ public class CompilationServiceImpl implements CompilationService {
     public List<CompilationDto> getCompilationsPage(boolean pinned, int from, int size) {
         Pageable pageable = PaginationUtils.createPageable(from, size, null);
 
-        Page<Compilation> compilationsPage = compilationRepository.findAllByPinned(pinned, pageable);
-        return compilationsPage.getContent().stream()
+        return compilationRepository.findAllByPinned(pinned, pageable).stream()
                 .map(compilationMapper::toDto)
                 .collect(Collectors.toList());
     }
