@@ -3,7 +3,6 @@ package ru.practicum.user;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.Named;
 import ru.practicum.user.dto.NewUserRequest;
 import ru.practicum.user.dto.UserDto;
 import ru.practicum.user.dto.UserShortDto;
@@ -17,7 +16,6 @@ public interface UserMapper {
 
     UserDto toDto(User user);
 
-    @Named("userToShortDto")
     UserShortDto toShortDto(User user);
 }
 

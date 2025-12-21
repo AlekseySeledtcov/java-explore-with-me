@@ -20,11 +20,8 @@ import ru.practicum.user.model.User;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface EventMapper {
 
-    @Named("toShortDto")
-    @Mapping(target = "category", source = "category", qualifiedByName = {"CategoryToDto"})
     @Mapping(target = "confirmedRequests", ignore = true)
     @Mapping(target = "eventDate", source = "eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
-    @Mapping(target = "initiator", source = "initiator", qualifiedByName = "userToShortDto")
     @Mapping(target = "views", ignore = true)
     EventShortDto toShortDto(Event event);
 
@@ -41,11 +38,9 @@ public interface EventMapper {
     Event toEntity(NewEventDto eventDto, Category category, User initiator, Location location);
 
 
-    @Mapping(target = "category", source = "event.category", qualifiedByName = "CategoryToDto")
     @Mapping(target = "confirmedRequests", ignore = true)
     @Mapping(target = "createdOn", source = "createdOn", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "eventDate", source = "eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
-    @Mapping(target = "initiator", source = "initiator", qualifiedByName = "userToShortDto")
     @Mapping(target = "views", ignore = true)
     EventFullDto toFullDto(Event event);
 

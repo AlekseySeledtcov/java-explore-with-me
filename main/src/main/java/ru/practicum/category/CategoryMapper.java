@@ -11,9 +11,7 @@ public interface CategoryMapper {
     @Mapping(target = "id", ignore = true)
     Category toEntity(NewCategoryDto newCategoryDto);
 
-    @Named("CategoryToDto")
     CategoryDto toDto(Category category);
-
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
             nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
