@@ -19,9 +19,7 @@ public class EventMapperUtil {
     private final CategoryService categoryService;
 
     public Set<Event> mapEventIdsToEvents(Set<Long> eventIds) {
-        System.out.println("List method called with: " + eventIds);
         if (eventIds == null || eventIds.isEmpty()) {
-            System.out.println("Returning null for List");
             return Collections.emptySet();
         }
 
