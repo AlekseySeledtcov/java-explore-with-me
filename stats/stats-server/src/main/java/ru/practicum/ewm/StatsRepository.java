@@ -15,7 +15,9 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
     @Query("SELECT new ru.practicum.ewm.dto.ViewStatsDto(eh.app, eh.uri, COUNT(DISTINCT eh.ip)) " +
             "FROM EndpointHit AS eh " +
-            "WHERE eh.uri IN :uris AND eh.timestamp BETWEEN :start AND :end " +
+            "WHERE eh.uri IN :uris " +
+            "AND eh.timestamp >= :start " +
+            "AND eh.timestamp <= :end " +
             "GROUP BY eh.app, eh.uri " +
             "ORDER BY COUNT(DISTINCT eh.ip) DESC")
     List<ViewStatsDto> findAllByTimestampBetweenStartAndEndWithUniqueIpWithUris(
@@ -23,10 +25,10 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
             @Param("end") LocalDateTime end,
             @Param("uris") List<String> uris);
 
-
     @Query("SELECT new ru.practicum.ewm.dto.ViewStatsDto(eh.app, eh.uri, COUNT(DISTINCT eh.ip)) " +
             "FROM EndpointHit AS eh " +
-            "WHERE eh.timestamp BETWEEN :start AND :end " +
+            "WHERE eh.timestamp >= :start " +
+            "AND eh.timestamp <= :end " +
             "GROUP BY eh.app, eh.uri " +
             "ORDER BY COUNT(DISTINCT eh.ip) DESC")
     List<ViewStatsDto> findAllByTimestampBetweenStartAndEndWithUniqueIpWithoutUris(
@@ -36,7 +38,9 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
     @Query("SELECT new ru.practicum.ewm.dto.ViewStatsDto(eh.app, eh.uri, COUNT(eh.ip)) " +
             "FROM EndpointHit AS eh " +
-            "WHERE eh.uri IN :uris AND eh.timestamp BETWEEN :start AND :end " +
+            "WHERE eh.uri IN :uris " +
+            "AND eh.timestamp >= :start " +
+            "AND eh.timestamp <= :end " +
             "GROUP BY eh.app, eh.uri " +
             "ORDER BY COUNT(eh.ip) DESC")
     List<ViewStatsDto> findAllByTimestampBetweenStartAndEndWithUris(
@@ -47,7 +51,8 @@ public interface StatsRepository extends JpaRepository<EndpointHit, Long> {
 
     @Query("SELECT new ru.practicum.ewm.dto.ViewStatsDto(eh.app, eh.uri, COUNT(eh.ip)) " +
             "FROM EndpointHit AS eh " +
-            "WHERE eh.timestamp BETWEEN :start AND :end " +
+            "WHERE eh.timestamp >= :start " +
+            "AND eh.timestamp <= :end " +
             "GROUP BY eh.app, eh.uri " +
             "ORDER BY COUNT(eh.ip) DESC")
     List<ViewStatsDto> findAllByTimestampBetweenStartAndEndWithoutUris(

@@ -1,5 +1,6 @@
 package ru.practicum.ewm.client;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
@@ -17,12 +18,13 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @Component
 public class StatsClient {
     private final RestTemplate restTemplate;
     private final String serverUrl;
 
-    public StatsClient(RestTemplateBuilder builder, @Value("${ewm-main-service.url}") String serverUrl) {
+    public StatsClient(RestTemplateBuilder builder, @Value("${stats-service.url}") String serverUrl) {
         this.serverUrl = serverUrl;
         this.restTemplate = builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
@@ -38,11 +40,11 @@ public class StatsClient {
         );
     }
 
-
     public List<ViewStatsDto> getStats(LocalDateTime start,
                                        LocalDateTime end,
-                                       List<String> uris,
+                                       List<String> urls,
                                        Boolean unique) {
+
         if (start == null) {
             throw new IllegalArgumentException("Параметр Start должен быть задан");
         }
@@ -52,11 +54,11 @@ public class StatsClient {
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromHttpUrl(serverUrl + "/stats")
-                .queryParam("start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .queryParam("end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                .queryParam("start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")))
+                .queryParam("end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
 
-        if (uris != null && !uris.isEmpty()) {
-            for (String uri : uris) {
+        if (urls != null && !urls.isEmpty()) {
+            for (String uri : urls) {
                 builder.queryParam("uris", uri);
             }
         }
