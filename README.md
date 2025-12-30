@@ -19,6 +19,9 @@
 
 ![ER-диаграмма](main/src/main/resources/ER-EWM.png)
 
+## Функциональность - комментарии 
+[pull request](https://github.com/AlekseySeledtcov/java-explore-with-me/pull/6)
+
 ## Технологии
 
 - **Язык**: Java 19
