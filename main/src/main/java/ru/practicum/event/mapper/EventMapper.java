@@ -3,6 +3,7 @@ package ru.practicum.event.mapper;
 import org.mapstruct.*;
 import ru.practicum.category.CategoryMapper;
 import ru.practicum.category.model.Category;
+import ru.practicum.comment.mapper.CommentMapper;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.NewEventDto;
@@ -16,13 +17,14 @@ import ru.practicum.user.model.User;
 
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = {CategoryMapper.class, UserMapper.class, RequestService.class},
+        uses = {CategoryMapper.class, UserMapper.class, RequestService.class, CommentMapper.class},
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface EventMapper {
 
     @Mapping(target = "confirmedRequests", ignore = true)
     @Mapping(target = "eventDate", source = "eventDate", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @Mapping(target = "views", ignore = true)
+    @Mapping(target = "comments", source = "comments")
     EventShortDto toShortDto(Event event);
 
 
@@ -35,6 +37,7 @@ public interface EventMapper {
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "requestModeration", source = "eventDto.requestModeration", defaultExpression = "java(true)")
     @Mapping(target = "state", ignore = true)
+    @Mapping(target = "comments", ignore = true)
     Event toEntity(NewEventDto eventDto, Category category, User initiator, Location location);
 
 
@@ -53,6 +56,7 @@ public interface EventMapper {
     @Mapping(target = "location", source = "location")
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "state", ignore = true)
+    @Mapping(target = "comments", ignore = true)
     void patchAdminRequest(@MappingTarget Event event, UpdateEventAdminRequest updateRequest, Category category, Location location);
 
 
@@ -63,5 +67,6 @@ public interface EventMapper {
     @Mapping(target = "initiator", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "state", ignore = true)
+    @Mapping(target = "comments", ignore = true)
     void patchUserRequest(@MappingTarget Event event, UpdateEventUserRequest updateRequest, Category category, Location location);
 }

@@ -5,11 +5,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.category.model.Category;
+import ru.practicum.comment.model.Comment;
 import ru.practicum.event.enums.State;
 import ru.practicum.location.model.Location;
 import ru.practicum.user.model.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "events")
@@ -69,4 +72,7 @@ public class Event {
     @Column(nullable = false, length = 120)
     @Size(min = 3)
     private String title;
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private List<Comment> comments = new ArrayList<>();
 }
