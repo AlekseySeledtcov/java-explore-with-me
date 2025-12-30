@@ -11,11 +11,12 @@ import org.springframework.data.repository.query.Param;
 import ru.practicum.event.enums.State;
 import ru.practicum.event.model.Event;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
 
-    Page<Event> findAllByInitiatorId(Long initiatorId, Pageable pageable);
+    List<Event> findAllByInitiatorId(Long initiatorId, Pageable pageable);
 
     @Query("SELECT e FROM Event AS e " +
             "JOIN FETCH e.location " +

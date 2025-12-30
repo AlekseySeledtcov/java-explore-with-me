@@ -1,5 +1,6 @@
 package ru.practicum.event.service;
 
+import ru.practicum.event.enums.State;
 import ru.practicum.event.model.Event;
 import ru.practicum.exceptions.NotFoundException;
 
@@ -41,4 +42,14 @@ public interface EventCommonService {
      * @return true, если есть события в указанной категории, иначе false
      */
     boolean existsEventByCategoryId(Long categoryId);
+
+    /**
+     * Получает событие по ID или выбрасывает исключение
+     *
+     * @param eventId ID события
+     * @return найденое событие
+     * @throws NotFoundException если событие не найдено
+     */
+
+    Event getEventByIdAndStateOrThrow(Long eventId, State state);
 }
