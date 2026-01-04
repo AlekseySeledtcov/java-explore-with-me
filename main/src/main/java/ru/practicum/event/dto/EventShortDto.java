@@ -5,7 +5,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.category.dto.CategoryDto;
+import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.user.dto.UserShortDto;
+
+import java.util.List;
 
 // Краткая информация о событии
 @Getter
@@ -44,4 +47,7 @@ public class EventShortDto {
 
     // Количество просмотрев события
     private Long views;
+
+    // Список комментариев
+    private List<CommentDto> comments;
 }

@@ -28,7 +28,8 @@ public class ErrorHandlingControllerAdvice {
         error.setStatus(HttpStatus.CONFLICT.toString());
         error.setReason("Integrity constraint has been violated.");
         error.setMessage(exception.getMessage());
-        error.setTimestamp(LocalDateTime.now().toString());
+        error.setTimestamp(LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern(DateTimeConstant.DATE_TIME_PATTERN)));
 
         error.setErrors(errors(exception.getStackTrace()));
         return ResponseEntity
@@ -43,7 +44,8 @@ public class ErrorHandlingControllerAdvice {
         error.setStatus(HttpStatus.NOT_FOUND.toString());
         error.setReason("The required object was not found.");
         error.setMessage(exception.getMessage());
-        error.setTimestamp(LocalDateTime.now().toString());
+        error.setTimestamp(LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern(DateTimeConstant.DATE_TIME_PATTERN)));
 
         error.setErrors(errors(exception.getStackTrace()));
         return ResponseEntity
@@ -72,7 +74,8 @@ public class ErrorHandlingControllerAdvice {
         error.setStatus(HttpStatus.BAD_REQUEST.toString());
         error.setReason("Incorrectly made request.");
         error.setMessage(errorMessages.toString());
-        error.setTimestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern(DateTimeConstant.DATE_TIME_PATTERN)));
+        error.setTimestamp(LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern(DateTimeConstant.DATE_TIME_PATTERN)));
         error.setErrors(errors(exception.getStackTrace()));
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -121,11 +124,28 @@ public class ErrorHandlingControllerAdvice {
         error.setStatus(HttpStatus.BAD_REQUEST.toString());
         error.setReason("Incorrectly made request.");
         error.setMessage(exception.getMessage());
-        error.setTimestamp(LocalDateTime.now().toString());
+        error.setTimestamp(LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern(DateTimeConstant.DATE_TIME_PATTERN)));
 
         error.setErrors(errors(exception.getStackTrace()));
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(error);
+    }
+
+    @ExceptionHandler(RateLimitException.class)
+    public ResponseEntity<ApiError> handleRateLimitException(RateLimitException exception) {
+
+        ApiError error = new ApiError();
+        error.setStatus(HttpStatus.TOO_MANY_REQUESTS.toString());
+        error.setReason("Request limit exceeded");
+        error.setMessage(exception.getMessage());
+        error.setTimestamp(LocalDateTime.now().format(
+                DateTimeFormatter.ofPattern(DateTimeConstant.DATE_TIME_PATTERN)));
+
+        error.setErrors(errors(exception.getStackTrace()));
+        return ResponseEntity
+                .status(HttpStatus.TOO_MANY_REQUESTS)
                 .body(error);
     }
 
@@ -138,3 +158,4 @@ public class ErrorHandlingControllerAdvice {
                 .collect(Collectors.toList());
     }
 }
+

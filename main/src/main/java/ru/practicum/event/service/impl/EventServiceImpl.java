@@ -40,7 +40,7 @@ public class EventServiceImpl implements EventService {
     public List<EventShortDto> getEventsByUserId(Long userId, Integer from, Integer size) {
         Pageable pageable = PaginationUtils.createPageable(from, size, null);
 
-        List<Event> events = eventRepository.findAllByInitiatorId(userId, pageable).getContent();
+        List<Event> events = eventRepository.findAllByInitiatorId(userId, pageable);
 
         return eventEnrichmentService.enrichmentEventShortDto(events);
     }

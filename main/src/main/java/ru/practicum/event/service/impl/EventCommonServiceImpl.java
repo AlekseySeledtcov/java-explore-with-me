@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.event.EventRepository;
+import ru.practicum.event.enums.State;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.service.EventCommonService;
 import ru.practicum.exceptions.NotFoundException;
@@ -42,4 +43,9 @@ public class EventCommonServiceImpl implements EventCommonService {
         return eventRepository.existsByCategoryId(categoryId);
     }
 
+    @Override
+    public Event getEventByIdAndStateOrThrow(Long eventId, State state) {
+        return eventRepository.findByIdAndState(eventId, state)
+                .orElseThrow(() -> new NotFoundException("Event with id=" + eventId + " was not found"));
+    }
 }

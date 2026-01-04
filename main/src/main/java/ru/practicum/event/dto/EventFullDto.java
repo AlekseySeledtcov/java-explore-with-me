@@ -6,12 +6,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.category.dto.CategoryDto;
+import ru.practicum.comment.dto.CommentDto;
 import ru.practicum.event.enums.State;
 import ru.practicum.location.model.Location;
 import ru.practicum.user.dto.UserShortDto;
 import ru.practicum.utils.DateTimeConstant;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -74,6 +76,9 @@ public class EventFullDto {
 
     // Количество просмотров события
     private Long views;
+
+    // Массив с комментариями
+    private List<CommentDto> comments;
 
     @Override
     public String toString() {
