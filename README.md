@@ -24,9 +24,6 @@
 
 ## Технологии
 
-<!-- STACK-TABLE:START -->
-<!-- STACK-TABLE:END -->
-
 - **Язык**: Java 19
 - **Сборка**: Maven 3.9.11
 - **Веб‑фреймворк**: Spring Boot 3.3.2
